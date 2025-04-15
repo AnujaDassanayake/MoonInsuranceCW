@@ -14,16 +14,13 @@ def read_root():
 @app.get("/metrics/", response_model=schemas.MetricsResponse)
 async def get_metrics():
     try:
-        # Step 1: Fetch sales data from Integration Service
         sales_data = await services.fetch_sales_data()
-
-        # Step 2: Calculate metrics
         metrics_result = metrics.calculate_metrics(sales_data)
 
-        # Step 3: Push Aggregated Metrics to Redshift
+        # Always push metrics to Redshift (even if no notification sent)
         push_to_redshift(metrics_result.top_agents)
 
-        # Step 4: Send Notification if Sales Threshold Crossed
+        # Notification only if threshold met
         for agent in metrics_result.top_agents:
             if agent.total_sales > 100000:
                 await services.send_notification(
