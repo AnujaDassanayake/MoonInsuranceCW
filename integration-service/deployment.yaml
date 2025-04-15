@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: integration-service
-  labels:
-    app: integration-service
 spec:
   replicas: 1
   selector:
@@ -22,6 +20,7 @@ spec:
         env:
         - name: DATABASE_URL
           value: "sqlite:///./sales_db.db"
+
 ---
 apiVersion: v1
 kind: Service

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: aggregator-service
+spec:
+  schedule: "0 * * * *"  # Runs every hour at minute 0
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: aggregator-service
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: aggregator-service
+            image: gcr.io/<your-gcp-project-id>/aggregator-service:latest
+            env:
+            - name: INTEGRATION_SERVICE_URL
+              value: "http://integration-service/sales/"
+            - name: NOTIFICATION_SERVICE_URL
+              value: "http://notification-service/notify/"
+            - name: REDSHIFT_HOST
+              value: "<your-redshift-cluster-url>"  # Example: mooninsurance-cluster.abc123xyz.redshift.amazonaws.com
+            - name: REDSHIFT_DB
+              value: "<your-redshift-database-name>"
+            - name: REDSHIFT_USER
+              value: "<your-redshift-username>"
+            - name: REDSHIFT_PASSWORD
+              value: "<your-redshift-password>"
