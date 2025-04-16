@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: aggregator-service
 spec:
-  schedule: "0 * * * *"  # Runs every hour at minute 0
+  schedule: "*/1 * * * *"  # Runs every hour at minute 0
   jobTemplate:
     spec:
       template:
@@ -14,7 +14,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: aggregator-service
-            image: gcr.io/<your-gcp-or-aws-project-id>/aggregator-service:latest
+            image: aggregator-service:latest
             ports:
             - containerPort: 80
             env:
