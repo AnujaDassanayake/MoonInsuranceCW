@@ -12,7 +12,7 @@ async def fetch_sales_data() -> List[schemas.Sale]:
         return sales_data
 
 async def send_notification(message: str):
-    notify_url = "http://localhost:8002/notify/"
+    notify_url = "http://notification-service/notify/"
     async with httpx.AsyncClient() as client:
         response = await client.post(notify_url, json={"message": message})
         response.raise_for_status()
