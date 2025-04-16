@@ -15,6 +15,7 @@ spec:
           containers:
           - name: aggregator-service
             image: aggregator-service:latest
+            imagePullPolicy: Never
             ports:
             - containerPort: 80
             env:
