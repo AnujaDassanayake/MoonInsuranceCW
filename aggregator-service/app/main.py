@@ -1,40 +1,31 @@
-from fastapi import FastAPI, HTTPException
-from sqlalchemy.orm import Session
-from typing import List
-import logging
+import asyncio
+from . import services, metrics
+from .redshift_utils import push_to_redshift
 
-logging.basicConfig(level=logging.INFO)
-
-from . import services, metrics, schemas
-from .redshift_utils import push_to_redshift  # <-- Import the Redshift function
-
-app = FastAPI()
-
-@app.get("/")
-def read_root():
-    return {"message": "Aggregator Service is Running"}
-
-@app.get("/metrics/", response_model=schemas.MetricsResponse)
-async def get_metrics():
+async def run_job():
     try:
+        print("🚀 Aggregator CronJob started")
+
+        # Step 1: Fetch sales data from Integration Service
         sales_data = await services.fetch_sales_data()
+
+        # Step 2: Calculate metrics
         metrics_result = metrics.calculate_metrics(sales_data)
 
-        #debugging code
-        logging.info("Calling push_to_redshift with metrics:")
-        logging.info(metrics_result.top_agents)
-        
-        # Always push metrics to Redshift (even if no notification sent)
+        # Step 3: Push metrics to Redshift
         push_to_redshift(metrics_result.top_agents)
 
-        # Notification only if threshold met
+        # Step 4: Send notifications if needed
         for agent in metrics_result.top_agents:
             if agent.total_sales > 100000:
                 await services.send_notification(
-                    f"🚀 Agent {agent.agent_code} exceeded sales target with ${agent.total_sales:,.2f}"
+                    f"🚨 Agent {agent.agent_code} exceeded sales target with ${agent.total_sales:,.2f}"
                 )
 
-        return metrics_result
+        print("✅ Aggregation job completed successfully.")
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"❌ Job failed: {str(e)}")
+
+if __name__ == "__main__":
+    asyncio.run(run_job())
