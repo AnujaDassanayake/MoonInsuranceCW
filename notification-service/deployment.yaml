@@ -14,19 +14,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: gcr.io/<your-gcp-project-id>/notification-service:latest
+        image: notification-service:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 80
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: notification-service
-spec:
-  selector:
-    app: notification-service
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
