@@ -1,6 +1,6 @@
 import asyncio
-from . import services, metrics
-from .redshift_utils import push_to_redshift
+from app import services, metrics
+from app.redshift_utils import push_to_redshift
 
 async def run_job():
     try:
