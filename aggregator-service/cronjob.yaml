@@ -14,16 +14,18 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: aggregator-service
-            image: gcr.io/<your-gcp-project-id>/aggregator-service:latest
+            image: gcr.io/<your-gcp-or-aws-project-id>/aggregator-service:latest
+            ports:
+            - containerPort: 80
             env:
             - name: INTEGRATION_SERVICE_URL
               value: "http://integration-service/sales/"
             - name: NOTIFICATION_SERVICE_URL
               value: "http://notification-service/notify/"
             - name: REDSHIFT_HOST
-              value: "<your-redshift-cluster-url>"  # Example: mooninsurance-cluster.abc123xyz.redshift.amazonaws.com
+              value: "<your-redshift-cluster-url>"
             - name: REDSHIFT_DB
-              value: "<your-redshift-database-name>"
+              value: "<your-redshift-db-name>"
             - name: REDSHIFT_USER
               value: "<your-redshift-username>"
             - name: REDSHIFT_PASSWORD

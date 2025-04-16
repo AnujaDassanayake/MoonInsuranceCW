@@ -1,6 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 from . import services, metrics, schemas
 from .redshift_utils import push_to_redshift  # <-- Import the Redshift function
@@ -17,6 +20,10 @@ async def get_metrics():
         sales_data = await services.fetch_sales_data()
         metrics_result = metrics.calculate_metrics(sales_data)
 
+        #debugging code
+        logging.info("Calling push_to_redshift with metrics:")
+        logging.info(metrics_result.top_agents)
+        
         # Always push metrics to Redshift (even if no notification sent)
         push_to_redshift(metrics_result.top_agents)
 

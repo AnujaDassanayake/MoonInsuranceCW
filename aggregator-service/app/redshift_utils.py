@@ -1,3 +1,4 @@
+import logging
 import psycopg2
 import os
 
@@ -8,10 +9,11 @@ def push_to_redshift(metrics):
     Args:
         metrics: List of objects with 'agent_code' and 'total_sales'
     """
-    print("🚀 [SIMULATION] Would push the following data to Redshift:")
+    logging.info("🚀 [SIMULATION] Would push the following data to Redshift:")
 
     for metric in metrics:
         print(f"  - Agent: {metric.agent_code}, Sales: {metric.total_sales}")
+        logging.info(f"  - Agent: {metric.agent_code}, Sales: {metric.total_sales}")
 
 
 # def push_to_redshift(metrics):
