@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: aggregator-service
 spec:
-  schedule: "*/1 * * * *"  # Runs every hour at minute 0
+  schedule: "*/1 * * * *"  # Every 1 minute (for testing)
   jobTemplate:
     spec:
       template:
@@ -14,8 +14,8 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: aggregator-service
-            image: aggregator-service:latest
-            imagePullPolicy: Never
+            image: us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/aggregator-service:latest
+            imagePullPolicy: Always
             ports:
             - containerPort: 80
             env:
