@@ -1,6 +1,8 @@
 from google.cloud import bigquery
 from datetime import datetime
 import os
+from datetime import datetime, timezone
+
 
 def push_to_bigquery(agent_sales: list):
     """
@@ -17,7 +19,7 @@ def push_to_bigquery(agent_sales: list):
         {
             "agent_code": agent.agent_code,
             "total_sales": agent.total_sales,
-            "timestamp": datetime.utcnow(),  # ✅ Add timestamp
+            "timestamp": datetime.now(timezone.utc).isoformat(),  # ✅ Best practice
         }
         for agent in agent_sales
     ]
