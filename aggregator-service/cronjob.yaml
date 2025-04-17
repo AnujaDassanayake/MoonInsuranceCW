@@ -19,15 +19,23 @@ spec:
             ports:
             - containerPort: 80
             env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/key.json
+            - name: GCP_PROJECT_ID
+              value: mooninsuarancecw
+            - name: BQ_DATASET
+              value: mooninsurance_metrics
+            - name: BQ_TABLE
+              value: top_agent_sales
             - name: INTEGRATION_SERVICE_URL
               value: "http://integration-service/sales/"
             - name: NOTIFICATION_SERVICE_URL
               value: "http://notification-service/notify/"
-            - name: REDSHIFT_HOST
-              value: "<your-redshift-cluster-url>"
-            - name: REDSHIFT_DB
-              value: "<your-redshift-db-name>"
-            - name: REDSHIFT_USER
-              value: "<your-redshift-username>"
-            - name: REDSHIFT_PASSWORD
-              value: "<your-redshift-password>"
+            volumeMounts:
+            - name: bq-service-account
+              mountPath: /var/secrets
+              readOnly: true
+          volumes:
+          - name: bq-service-account
+            secret:
+              secretName: bq-service-account-key
