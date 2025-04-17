@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: integration-service
-        image: integration-service:latest
-        imagePullPolicy: Never  # Since you're using a locally built image in Minikube
+        image: us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/integration-service:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         env:
