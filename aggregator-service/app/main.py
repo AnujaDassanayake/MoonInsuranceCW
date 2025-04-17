@@ -1,6 +1,6 @@
 import asyncio
 from app import services, metrics
-from app.redshift_utils import push_to_redshift
+from app.bigquery_utils import push_to_bigquery  # ✅ Import BigQuery function
 
 async def run_job():
     try:
@@ -12,8 +12,8 @@ async def run_job():
         # Step 2: Calculate metrics
         metrics_result = metrics.calculate_metrics(sales_data)
 
-        # Step 3: Push metrics to Redshift
-        push_to_redshift(metrics_result.top_agents)
+        # ✅ Step 3: Push metrics to BigQuery
+        push_to_bigquery(metrics_result.top_agents)
 
         # Step 4: Send notifications if needed
         for agent in metrics_result.top_agents:

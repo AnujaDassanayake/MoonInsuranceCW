@@ -5,3 +5,4 @@ pydantic
 python-dotenv
 httpx
 psycopg2-binary
+google-cloud-bigquery==3.17.2
