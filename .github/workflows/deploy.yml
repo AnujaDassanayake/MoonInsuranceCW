@@ -35,6 +35,7 @@ jobs:
         run: |
           echo "$GCP_SA_KEY" > key.json
           gcloud auth activate-service-account --key-file=key.json
+          gcloud config set account github-cicd@mooninsuarancecw.iam.gserviceaccount.com
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
       ###############################
