@@ -33,11 +33,11 @@ jobs:
       ###############################
       # 🔧 Build & Push: Agent Service
       ###############################
-      # - name: Build Agent Service Docker image
-      #   run: docker build -t us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/agent-service:latest ./agent-service
+      - name: Build Agent Service Docker image
+        run: docker build -t us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/agent-service:latest ./agent-service
 
-      # - name: Push Agent Service image
-      #   run: docker push us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/agent-service:latest
+      - name: Push Agent Service image
+        run: docker push us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/agent-service:latest
 
       ###############################
       # 🔧 Build & Push: Integration Service
