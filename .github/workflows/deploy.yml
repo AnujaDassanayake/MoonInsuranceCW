@@ -35,7 +35,8 @@ jobs:
         run: |
           echo "$GCP_SA_KEY" > key.json
           gcloud auth activate-service-account --key-file=key.json
-          gcloud config set account $(jq -r .client_email key.json)
+          ACCOUNT=$(jq -r .client_email key.json)
+          gcloud config set account "$ACCOUNT"
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
       ###############################
