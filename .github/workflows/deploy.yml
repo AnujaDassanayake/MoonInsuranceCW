@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout source
         uses: actions/checkout@v3
 
       - name: Set up gcloud CLI
@@ -22,50 +22,52 @@ jobs:
           project_id: mooninsuarancecw
           export_default_credentials: true
 
-      - name: Authenticate Docker for Artifact Registry
+      - name: Authenticate Docker to Artifact Registry
         run: |
+          echo "${{ secrets.GCP_SA_KEY }}" > key.json
+          gcloud auth activate-service-account --key-file=key.json
           gcloud auth configure-docker us-central1-docker.pkg.dev
 
-      #########################
-      # Agent Service
-      #########################
+      ###############################
+      # 🔧 Build & Push: Agent Service
+      ###############################
       - name: Build Agent Service Docker image
         run: docker build -t us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/agent-service:latest ./agent-service
 
       - name: Push Agent Service image
         run: docker push us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/agent-service:latest
 
-      #########################
-      # Integration Service
-      #########################
+      ###############################
+      # 🔧 Build & Push: Integration Service
+      ###############################
       - name: Build Integration Service Docker image
         run: docker build -t us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/integration-service:latest ./integration-service
 
       - name: Push Integration Service image
         run: docker push us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/integration-service:latest
 
-      #########################
-      # Notification Service
-      #########################
+      ###############################
+      # 🔧 Build & Push: Notification Service
+      ###############################
       - name: Build Notification Service Docker image
         run: docker build -t us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/notification-service:latest ./notification-service
 
       - name: Push Notification Service image
         run: docker push us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/notification-service:latest
 
-      #########################
-      # Aggregator Service
-      #########################
+      ###############################
+      # 🔧 Build & Push: Aggregator Service
+      ###############################
       - name: Build Aggregator Service Docker image
         run: docker build -t us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/aggregator-service:latest ./aggregator-service
 
       - name: Push Aggregator Service image
         run: docker push us-central1-docker.pkg.dev/mooninsuarancecw/mooninsurance-repo/aggregator-service:latest
 
-      #########################
-      # Deploy to GKE
-      #########################
-      - name: Configure kubectl with GKE credentials
+      ###############################
+      # 🚀 Deploy All Services to GKE
+      ###############################
+      - name: Connect to GKE
         run: gcloud container clusters get-credentials mooninsurance-cluster --zone us-central1-c
 
       - name: Apply Agent Service Deployment
